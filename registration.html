@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-MiNDS | Club Member Registration</title>
+    <link rel="stylesheet" href="registration.css">
+</head>
+<body>
+    <main class="registration-card">
+        <header class="registration-header">
+            <h1>K-MiNDS Member Registration</h1>
+            <p>Complete this form to apply for club membership.</p>
+        </header>
+
+        <form id="registrationForm" class="registration-form">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="roll">Roll Number</label>
+                <input type="text" id="roll" name="roll" required>
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" name="department" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group full">
+                <label for="studentMail">Student Email</label>
+                <input type="email" id="studentMail" name="studentMail" placeholder="example@student.kuet.ac.bd" required>
+            </div>
+
+            <div class="form-group full">
+                <label for="researchInterest">Research Interest</label>
+                <textarea id="researchInterest" name="researchInterest" placeholder="Mention your interests in AI, ML, Data Science, etc." required></textarea>
+            </div>
+
+            <div class="form-group full">
+                <label for="notes">Why do you want to join? (Optional)</label>
+                <textarea id="notes" name="notes" placeholder="Share a short motivation note"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <a href="Practice.html" class="btn btn-secondary">Back to Home</a>
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+            </div>
+
+            <p class="footer-note">After submitting, you will be redirected to the home page.</p>
+        </form>
+    </main>
+
+    <script>
+        const registrationForm = document.getElementById('registrationForm');
+
+        registrationForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            alert('Application submitted successfully. Redirecting to home page...');
+            window.location.href = 'Practice.html';
+        });
+    </script>
+</body>
+</html>

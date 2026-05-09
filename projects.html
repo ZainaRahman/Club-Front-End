@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-MiNDS | Projects Showcase</title>
+    <link rel="stylesheet" href="projects.css">
+</head>
+<body>
+    <header class="projects-hero">
+        <nav class="projects-nav">
+            <a class="back-link" href="Practice.html">← Back to Home</a>
+            <span class="brand">K-MiNDS</span>
+            <a class="cta-link" href="Practice.html#join">Join the Club</a>
+        </nav>
+
+        <div class="hero-grid">
+            <div class="hero-copy reveal" data-reveal>
+                <p class="eyebrow">Projects showcase</p>
+                <h1>Work built by K-MiNDS members</h1>
+                <p class="lede">A focused gallery of the club's projects, experiments, and collaborative builds across AI, machine learning, and data science.</p>
+                <div class="hero-actions">
+                    <a class="primary-btn" href="#projects">Explore Projects</a>
+                    <a class="secondary-btn" href="Practice.html#activities">See Club Activities</a>
+                </div>
+            </div>
+
+            <div class="hero-card reveal" data-reveal>
+                <div class="orb orb-one"></div>
+                <div class="orb orb-two"></div>
+                <div class="metric">
+                    <span>12+</span>
+                    <p>project concepts, prototypes, and demos</p>
+                </div>
+                <div class="metric-row">
+                    <div>
+                        <strong>AI</strong>
+                        <span>Vision & automation</span>
+                    </div>
+                    <div>
+                        <strong>ML</strong>
+                        <span>Prediction & modeling</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="projects" class="projects-section">
+            <div class="section-heading reveal" data-reveal>
+                <p class="eyebrow">Featured builds</p>
+                <h2>Selected project highlights</h2>
+                <p>Replace these showcase cards with your club's exact project titles, screenshots, and links whenever you are ready.</p>
+            </div>
+
+            <div class="projects-grid">
+                <article class="project-card reveal" data-reveal style="--delay: 0ms;">
+                    <div class="card-top">
+                        <span class="project-tag">Computer Vision</span>
+                        <span class="project-index">01</span>
+                    </div>
+                    <h3>Smart Attendance Prototype</h3>
+                    <p>A face-detection attendance workflow that demonstrates practical computer vision techniques for classroom automation.</p>
+                    <ul>
+                        <li>OpenCV pipeline</li>
+                        <li>Image preprocessing</li>
+                        <li>Real-time feedback</li>
+                    </ul>
+                </article>
+
+                <article class="project-card reveal" data-reveal style="--delay: 120ms;">
+                    <div class="card-top">
+                        <span class="project-tag">NLP</span>
+                        <span class="project-index">02</span>
+                    </div>
+                    <h3>Campus FAQ Assistant</h3>
+                    <p>An interactive text assistant that helps answer common student questions using a lightweight natural language workflow.</p>
+                    <ul>
+                        <li>Intent matching</li>
+                        <li>Text preprocessing</li>
+                        <li>Conversation design</li>
+                    </ul>
+                </article>
+
+                <article class="project-card reveal" data-reveal style="--delay: 240ms;">
+                    <div class="card-top">
+                        <span class="project-tag">Data Science</span>
+                        <span class="project-index">03</span>
+                    </div>
+                    <h3>Results Analytics Dashboard</h3>
+                    <p>A visual dashboard that turns academic data into clean charts and summary insights for faster decision-making.</p>
+                    <ul>
+                        <li>Data cleaning</li>
+                        <li>Interactive charts</li>
+                        <li>Insight reporting</li>
+                    </ul>
+                </article>
+
+                <article class="project-card reveal" data-reveal style="--delay: 360ms;">
+                    <div class="card-top">
+                        <span class="project-tag">Research</span>
+                        <span class="project-index">04</span>
+                    </div>
+                    <h3>Paper Reading Toolkit</h3>
+                    <p>A collaboration space for literature review, paper notes, and experiment tracking used during research discussions.</p>
+                    <ul>
+                        <li>Note organization</li>
+                        <li>Reading summaries</li>
+                        <li>Research planning</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section class="timeline-section">
+            <div class="section-heading reveal" data-reveal>
+                <p class="eyebrow">How the projects grow</p>
+                <h2>From idea to demo</h2>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item reveal" data-reveal>
+                    <span class="timeline-dot"></span>
+                    <div>
+                        <h3>Brainstorm</h3>
+                        <p>Members pick a problem and define what the club wants to solve or explore.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal" data-reveal>
+                    <span class="timeline-dot"></span>
+                    <div>
+                        <h3>Build</h3>
+                        <p>Teams prototype the idea, test ideas quickly, and learn by shipping small versions.</p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal" data-reveal>
+                    <span class="timeline-dot"></span>
+                    <div>
+                        <h3>Present</h3>
+                        <p>Finished work is presented to members, discussed, and improved for the next cycle.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const revealItems = document.querySelectorAll('[data-reveal]');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        revealItems.forEach((item) => observer.observe(item));
+    </script>
+</body>
+</html>

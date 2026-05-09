@@ -1,0 +1,160 @@
+:root {
+            --primary-color: #092a4b;
+            --accent-color: #3498db;
+            --accent-dark: #2980b9;
+            --light-bg: #ecf0f1;
+            --text-color: #2c3e50;
+            --gray-text: #7f8c8d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eaf5ff 0%, #f8fcff 45%, #ffffff 100%);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .registration-card {
+            width: 100%;
+            max-width: 720px;
+            background-color: white;
+            border-radius: 14px;
+            box-shadow: 0 12px 35px rgba(9, 42, 75, 0.14);
+            overflow: hidden;
+        }
+
+        .registration-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-dark) 100%);
+            color: white;
+            padding: 28px;
+            text-align: center;
+        }
+
+        .registration-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .registration-header p {
+            opacity: 0.95;
+            font-size: 0.98rem;
+        }
+
+        .registration-form {
+            padding: 26px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 2px solid #dce8f3;
+            border-radius: 7px;
+            font-size: 0.98rem;
+            font-family: inherit;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.18);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 7px;
+            padding: 11px 20px;
+            font-size: 0.98rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #eef5fb;
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #dfedf8;
+        }
+
+        .footer-note {
+            grid-column: 1 / -1;
+            color: var(--gray-text);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 700px) {
+            .registration-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                justify-content: stretch;
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
