@@ -9,6 +9,84 @@
         body.modal-open {
             overflow: hidden;
         }
+        
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .profile-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .profile-circle:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .profile-dropdown.active {
+            display: block;
+        }
+        
+        .profile-dropdown-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .profile-dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .profile-dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .profile-dropdown-username {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .profile-dropdown-email {
+            color: #666;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        .profile-logout-btn {
+            color: #d32f2f;
+            font-weight: 500;
+        }
+        
+        .profile-logout-btn:hover {
+            background-color: #ffebee !important;
+        }
     </style>
 </head>
 <body>
@@ -16,8 +94,25 @@
         <div class="container">
             <div class="logo">K-MiNDS</div>
             <div class="log-sign-section">
-                <button id="log-in-btn" onclick="loginpage()">Login</button>
-                <button id="sign-up-btn" onclick="signuppage()">Sign Up</button>
+                <?php if ($isLoggedIn): ?>
+                    <div class="profile-section">
+                        <div class="profile-circle" onclick="toggleProfileDropdown()" title="<?php echo htmlspecialchars($username); ?>">
+                            <?php echo htmlspecialchars($initials); ?>
+                            <div class="profile-dropdown" id="profileDropdown">
+                                <div class="profile-dropdown-item">
+                                    <div class="profile-dropdown-username"><?php echo htmlspecialchars($username); ?></div>
+                                    <div class="profile-dropdown-email"><?php echo htmlspecialchars($_SESSION['email']); ?></div>
+                                </div>
+                                <div class="profile-dropdown-item profile-logout-btn" onclick="window.location.href='logout.php'">
+                                    Logout
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <button id="log-in-btn" onclick="loginpage()">Login</button>
+                    <button id="sign-up-btn" onclick="signuppage()">Sign Up</button>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
@@ -248,7 +343,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeLoginModal()">&times;</span>
             <h2>Login</h2>
-            <form>
+            <form action="login.php" method="POST">
                 <div class="form-group">
                     <label for="login-email">Email:</label>
                     <input type="email" id="login-email" name="email" required>
@@ -257,7 +352,7 @@
                     <label for="login-password">Password:</label>
                     <input type="password" id="login-password" name="password" required>
                 </div>
-                <button type="submit" class="form-btn">Login</button>
+                <button type="submit" name="submit" class="form-btn">Login</button>
             </form>
             <p class="toggle-form">Don't have an account? <a href="#" onclick="closeLoginModal(); signuppage()">Sign Up</a></p>
         </div>
@@ -267,7 +362,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeSignupModal()">&times;</span>
             <h2>Sign Up</h2>
-            <form>
+            <form action="signup.php" method="POST">
                 <div class="form-group">
                     <label for="signup-name">Full Name:</label>
                     <input type="text" id="signup-name" name="name" required>
@@ -279,16 +374,55 @@
                 <div class="form-group">
                     <label for="signup-password">Password:</label>
                     <input type="password" id="signup-password" name="password" required>
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Must have: 8+ characters, 1 uppercase, 1 lowercase, 1 number
+                    </small>
                 </div>
                 <div class="form-group">
                     <label for="signup-confirm">Confirm Password:</label>
                     <input type="password" id="signup-confirm" name="confirm" required>
                 </div>
-                <button type="submit" class="form-btn">Sign Up</button>
+                <button type="submit" name="submit" class="form-btn">Sign Up</button>
             </form>
             <p class="toggle-form">Already have an account? <a href="#" onclick="closeSignupModal(); loginpage()">Login</a></p>
         </div>
     </div>
     <script src="Landing_page.js"></script>
+    <script>
+        // Toggle profile dropdown
+        function toggleProfileDropdown() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileCircle = document.querySelector('.profile-circle');
+            const dropdown = document.getElementById('profileDropdown');
+            if (dropdown && profileCircle && !profileCircle.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Check if signup or login was successful
+        window.addEventListener('load', function() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('signup_success') === 'true') {
+                // Remove the parameter from URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                // Show alert and open login
+                alert('✓ Sign up successful! Please log in with your credentials.');
+                loginpage();
+            }
+            if (params.get('login_success') === 'true') {
+                // Remove the parameter from URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                // Show welcome message
+                alert('✓ Login successful!');
+                // Reload page to show profile circle
+                location.reload();
+            }
+        });
+    </script>
 </body>
 </html>
