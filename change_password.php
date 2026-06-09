@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 if (!isset($_SESSION['username']) || !isset($_SESSION['email'])) {
     header('Location: login.php');
     exit();
@@ -52,7 +56,7 @@ if (isset($_POST['submit'])) {
                 if ($result && mysqli_num_rows($result) === 1) {
                     $row = mysqli_fetch_assoc($result);
 
-                    if ($row['password'] !== $current_password) {
+                     if (!password_verify($current_password, $row['password'])) {
                         $errors[] = 'Current password is incorrect';
                     } else {
                         $update_query = 'UPDATE club_table SET password = ? WHERE email = ?';
@@ -61,7 +65,8 @@ if (isset($_POST['submit'])) {
                         if (!$update_statement) {
                             $errors[] = 'Update Failed: ' . mysqli_error($connection);
                         } else {
-                            mysqli_stmt_bind_param($update_statement, 'ss', $new_password, $email);
+                            $hashed_new_password = password_hash($new_password, PASSWORD_BCRYPT);
+                            mysqli_stmt_bind_param($update_statement, 'ss', $hashed_new_password, $email);
                             if (mysqli_stmt_execute($update_statement)) {
                                 $success = true;
                                 mysqli_stmt_close($update_statement);
