@@ -41,6 +41,19 @@ mysqli_query($conn, "CREATE TABLE IF NOT EXISTS club_competition_wins (
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )");
 
+// Auto-create club_publications table
+mysqli_query($conn, "CREATE TABLE IF NOT EXISTS club_publications (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    title        VARCHAR(300) NOT NULL,
+    pub_type     VARCHAR(50)  NOT NULL DEFAULT 'Journal',
+    venue        VARCHAR(300) DEFAULT NULL,
+    venue_url    VARCHAR(500) DEFAULT NULL,
+    pub_year     YEAR        NOT NULL,
+    topic        TEXT         DEFAULT NULL,
+    bullets      TEXT         DEFAULT NULL,
+    created_at   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+)");
+
 // Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -191,12 +204,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($errors)) {
-    if (!in_array($action, ['delete_event','delete_member','toggle_role','delete_competition_win'])) {
-        header('Location: admin_dashboard.php#competitions');
-        exit();
+    // ── Publications ──────────────────────────────────────────────
+    if ($action === 'add_publication') {
+        $ptitle   = trim($_POST['pub_title']     ?? '');
+        $ptype    = trim($_POST['pub_type']      ?? 'Journal');
+        $pvenue   = trim($_POST['pub_venue']     ?? '');
+        $pvurl    = trim($_POST['pub_venue_url'] ?? '');
+        $pyear    = (int)($_POST['pub_year']     ?? date('Y'));
+        $ptopic   = trim($_POST['pub_topic']     ?? '');
+        $pbullets = trim($_POST['pub_bullets']   ?? '');
+        if ($ptitle === '' || $pyear < 1900) {
+            $errors[] = 'Publication title and year are required.';
+        } else {
+            $s = mysqli_prepare($conn, 'INSERT INTO club_publications (title,pub_type,venue,venue_url,pub_year,topic,bullets) VALUES (?,?,?,?,?,?,?)');
+            mysqli_stmt_bind_param($s, 'ssssiss', $ptitle, $ptype, $pvenue, $pvurl, $pyear, $ptopic, $pbullets);
+            if (mysqli_stmt_execute($s)) { $_SESSION['admin_flash'] = ['type'=>'success','text'=>'Publication added.']; }
+            else { $errors[] = 'Failed to add publication: ' . mysqli_stmt_error($s); }
+            mysqli_stmt_close($s);
+        }
+        header('Location: admin_dashboard.php#publications'); exit();
     }
-}
+
+    if ($action === 'delete_publication') {
+        $id = (int)($_POST['pub_id'] ?? 0);
+        if ($id > 0) {
+            $s = mysqli_prepare($conn, 'DELETE FROM club_publications WHERE id=?');
+            mysqli_stmt_bind_param($s, 'i', $id);
+            mysqli_stmt_execute($s); mysqli_stmt_close($s);
+            $_SESSION['admin_flash'] = ['type'=>'success','text'=>'Publication deleted.'];
+        }
+        header('Location: admin_dashboard.php#publications'); exit();
+    }
+
+    if ($action === 'edit_publication') {
+        $id       = (int)($_POST['pub_id']       ?? 0);
+        $ptitle   = trim($_POST['pub_title']     ?? '');
+        $ptype    = trim($_POST['pub_type']      ?? 'Journal');
+        $pvenue   = trim($_POST['pub_venue']     ?? '');
+        $pvurl    = trim($_POST['pub_venue_url'] ?? '');
+        $pyear    = (int)($_POST['pub_year']     ?? date('Y'));
+        $ptopic   = trim($_POST['pub_topic']     ?? '');
+        $pbullets = trim($_POST['pub_bullets']   ?? '');
+        if ($id > 0 && $ptitle !== '' && $pyear >= 1900) {
+            $s = mysqli_prepare($conn, 'UPDATE club_publications SET title=?,pub_type=?,venue=?,venue_url=?,pub_year=?,topic=?,bullets=? WHERE id=?');
+            mysqli_stmt_bind_param($s, 'ssssissi', $ptitle, $ptype, $pvenue, $pvurl, $pyear, $ptopic, $pbullets, $id);
+            mysqli_stmt_execute($s); mysqli_stmt_close($s);
+            $_SESSION['admin_flash'] = ['type'=>'success','text'=>'Publication updated.'];
+        }
+        header('Location: admin_dashboard.php#publications'); exit();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($errors)) {
+        if (!in_array($action, ['delete_event','delete_member','toggle_role','delete_competition_win','delete_publication'])) {
+            header('Location: admin_dashboard.php#competitions');
+            exit();
+        }
+    }
 }
 
 $flash = $_SESSION['admin_flash'] ?? null;
@@ -215,10 +278,15 @@ $competition_wins=[];
 $cRes=mysqli_query($conn,"SELECT * FROM club_competition_wins ORDER BY win_date DESC");
 while($row=mysqli_fetch_assoc($cRes)) $competition_wins[]=$row;
 
+$publications=[];
+$pRes=mysqli_query($conn,"SELECT * FROM club_publications ORDER BY pub_year DESC, id DESC");
+while($row=mysqli_fetch_assoc($pRes)) $publications[]=$row;
+
 $totalMembers=count(array_filter($members,fn($m)=>$m['role']!=='admin'));
 $totalAdmins =count(array_filter($members,fn($m)=>$m['role']==='admin'));
 $totalEvents =count($events);
 $totalWins   =count($competition_wins);
+$totalPubs   =count($publications);
 
 mysqli_close($conn);
 ?>
@@ -329,6 +397,7 @@ body::before {
 .stat-card .value { font-size:2.6rem; font-weight:800; line-height:1; color:var(--accent) }
 .stat-card.green .value { color:#27ae60 } .stat-card.green { --glow:rgba(46,204,113,0.12) }
 .stat-card.yellow .value { color:#e67e22 } .stat-card.yellow { --glow:rgba(243,156,18,0.12) }
+.stat-card.purple .value { color:#8e44ad } .stat-card.purple { --glow:rgba(142,68,173,0.12) }
 /* Sections */
 .section { background:var(--surface); border:1px solid var(--border); border-radius:22px; overflow:hidden; margin-bottom:24px; box-shadow:var(--shadow) }
 .section-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border); background:var(--surface2) }
@@ -422,6 +491,10 @@ body::before {
     <div class="stat-card blue">
         <div class="label">Competition Wins</div>
         <div class="value"><?= $totalWins ?></div>
+    </div>
+    <div class="stat-card purple">
+        <div class="label">Publications</div>
+        <div class="value"><?= $totalPubs ?></div>
     </div>
 </div>
 
@@ -569,6 +642,102 @@ body::before {
     </div>
 </section>
 
+<!-- PUBLICATIONS SECTION -->
+<section class="section" id="publications">
+    <div class="section-head">
+        <h2><span class="section-icon">📄</span> Publications</h2>
+        <button class="btn btn-primary" onclick="toggleForm('publicationForm')">+ Add Publication</button>
+    </div>
+    <div class="section-body">
+        <div class="add-form-wrap" id="publicationForm">
+            <form method="POST">
+                <input type="hidden" name="action" value="add_publication">
+                <div class="form-grid">
+                    <div class="form-group span2">
+                        <label>Paper Title *</label>
+                        <input type="text" name="pub_title" placeholder="e.g. Deep Learning for Time Series Forecasting" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type *</label>
+                        <select name="pub_type">
+                            <option value="Journal">Journal</option>
+                            <option value="Conference">Conference</option>
+                            <option value="Preprint">Preprint</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Year *</label>
+                        <input type="number" name="pub_year" min="1990" max="2099" value="<?= date('Y') ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Venue / Journal / Conference</label>
+                        <input type="text" name="pub_venue" placeholder="e.g. arXiv ML, ICML 2025">
+                    </div>
+                    <div class="form-group">
+                        <label>Venue URL (optional)</label>
+                        <input type="url" name="pub_venue_url" placeholder="https://arxiv.org/...">
+                    </div>
+                    <div class="form-group span2">
+                        <label>Topic / Abstract (one paragraph)</label>
+                        <textarea name="pub_topic" placeholder="Brief description of the paper's contribution..."></textarea>
+                    </div>
+                    <div class="form-group span2">
+                        <label>Bullet points <small style="font-weight:400;color:var(--muted)">(one per line — shown as a list on the page)</small></label>
+                        <textarea name="pub_bullets" rows="4" placeholder="Evaluated 6+ deep learning models&#10;Benchmark datasets from multiple domains&#10;Comparative performance analysis"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-ghost" onclick="toggleForm('publicationForm')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Publication</button>
+                    </div>
+                </div>
+            </form>
+            <hr class="divider">
+        </div>
+
+        <?php if (empty($publications)): ?>
+            <div class="empty">No publications yet. Add your first one above.</div>
+        <?php else: ?>
+        <table class="data-table">
+            <thead><tr><th>Title</th><th>Type</th><th>Year</th><th>Venue</th><th>Actions</th></tr></thead>
+            <tbody>
+            <?php foreach ($publications as $pub): ?>
+            <tr>
+                <td><strong><?= h($pub['title']) ?></strong></td>
+                <td><span class="role-badge role-member"><?= h($pub['pub_type']) ?></span></td>
+                <td><?= h($pub['pub_year']) ?></td>
+                <td style="color:var(--muted)"><?= h(mb_strimwidth($pub['venue']??'',0,50,'…')) ?></td>
+                <td>
+                    <div class="actions-cell">
+                        <button class="btn btn-warn btn-sm"
+                            onclick='openEditPublication(
+                                <?= $pub["id"] ?>,
+                                <?= json_encode($pub["title"]) ?>,
+                                <?= json_encode($pub["pub_type"]) ?>,
+                                <?= json_encode($pub["venue"] ?? "") ?>,
+                                <?= json_encode($pub["venue_url"] ?? "") ?>,
+                                <?= (int)$pub["pub_year"] ?>,
+                                <?= json_encode($pub["topic"] ?? "") ?>,
+                                <?= json_encode($pub["bullets"] ?? "") ?>
+                            )'>
+                            Edit
+                        </button>
+                        <form method="POST" onsubmit="return confirm('Delete this publication?')">
+                            <input type="hidden" name="action" value="delete_publication">
+                            <input type="hidden" name="pub_id" value="<?= $pub['id'] ?>">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+    </div>
+</section>
+
 <!-- MEMBERS SECTION -->
 <section class="section" id="members">
     <div class="section-head">
@@ -689,6 +858,56 @@ body::before {
     </div>
 </div>
 
+<div class="modal-overlay" id="editPublicationModal">
+    <div class="modal">
+        <h3>✏️ Edit Publication</h3>
+        <form method="POST">
+            <input type="hidden" name="action" value="edit_publication">
+            <input type="hidden" name="pub_id" id="editPubId">
+            <div class="form-grid">
+                <div class="form-group span2">
+                    <label>Paper Title *</label>
+                    <input type="text" name="pub_title" id="editPubTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="pub_type" id="editPubType">
+                        <option value="Journal">Journal</option>
+                        <option value="Conference">Conference</option>
+                        <option value="Preprint">Preprint</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Year *</label>
+                    <input type="number" name="pub_year" id="editPubYear" min="1990" max="2099" required>
+                </div>
+                <div class="form-group">
+                    <label>Venue / Journal / Conference</label>
+                    <input type="text" name="pub_venue" id="editPubVenue">
+                </div>
+                <div class="form-group">
+                    <label>Venue URL</label>
+                    <input type="url" name="pub_venue_url" id="editPubVenueUrl">
+                </div>
+                <div class="form-group span2">
+                    <label>Topic / Abstract</label>
+                    <textarea name="pub_topic" id="editPubTopic"></textarea>
+                </div>
+                <div class="form-group span2">
+                    <label>Bullet points <small style="font-weight:400;color:var(--muted)">(one per line)</small></label>
+                    <textarea name="pub_bullets" id="editPubBullets" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Publication</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 function toggleForm(id){document.getElementById(id).classList.toggle('open')}
 function openEditEvent(id, title, date, desc){
@@ -701,19 +920,30 @@ function openEditEvent(id, title, date, desc){
 document.getElementById('editEventModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-
 function openEditCompetitionWin(id, name, date, result, desc){
     document.getElementById('editCompetitionWinId').value = id || '';
     document.getElementById('editCompetitionWinName').value = name || '';
     document.getElementById('editCompetitionWinDate').value = date || '';
     document.getElementById('editCompetitionWinResult').value = result || '';
-
     document.getElementById('editCompetitionWinDesc').value = desc || '';
-
     document.getElementById('editCompetitionWinModal').classList.add('open');
 }
+
+function openEditPublication(id, title, type, venue, venueUrl, year, topic, bullets){
+    document.getElementById('editPubId').value        = id || '';
+    document.getElementById('editPubTitle').value     = title || '';
+    document.getElementById('editPubType').value      = type || 'Journal';
+    document.getElementById('editPubVenue').value     = venue || '';
+    document.getElementById('editPubVenueUrl').value  = venueUrl || '';
+    document.getElementById('editPubYear').value      = year || '';
+    document.getElementById('editPubTopic').value     = topic || '';
+    document.getElementById('editPubBullets').value   = bullets || '';
+    document.getElementById('editPublicationModal').classList.add('open');
+}
+
 function closeModal(){document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'))}
 document.getElementById('editCompetitionWinModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.getElementById('editPublicationModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
 </body>
