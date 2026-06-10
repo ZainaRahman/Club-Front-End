@@ -1,3 +1,15 @@
+<?php
+$conn = mysqli_connect('localhost', 'root', '', 'club_db');
+$publications = [];
+if ($conn) {
+    $res = mysqli_query($conn, "SELECT * FROM club_publications ORDER BY pub_year DESC, id DESC");
+    while ($row = mysqli_fetch_assoc($res)) {
+        $publications[] = $row;
+    }
+    mysqli_close($conn);
+}
+function h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,42 +59,56 @@
                 </div>
 
                 <div class="card-grid">
-                    <article class="glass-card reveal-item" data-reveal style="--delay: 0ms;">
-                        <div class="card-label">Journal</div>
-                        <h3>Deep Learning for Time Series Forecasting</h3>
-                        <p><strong>Published in:</strong> <a href="https://arxiv.org/list/cs.LG/recent" target="_blank" rel="noopener noreferrer">arXiv ML</a></p>
-                        <p><strong>Year:</strong> 2025</p>
-                        <p><strong>Topic:</strong> A comprehensive study of LSTM and Transformer architectures for financial time series prediction with attention mechanisms.</p>
-                        <ul>
-                            <li>Evaluated 6+ deep learning models</li>
-                            <li>Benchmark datasets from multiple domains</li>
-                            <li>Comparative performance analysis</li>
-                        </ul>
-                    </article>
+                    <?php if (empty($publications)): ?>
+                        <p style="color: var(--muted, #888); grid-column: 1 / -1; text-align: center; padding: 2rem 0;">
+                            No publications have been added yet.
+                        </p>
+                    <?php else: ?>
+                        <?php foreach ($publications as $i => $pub):
+                            $delay   = $i * 120;
+                            $bullets = [];
+                            if (!empty($pub['bullets'])) {
+                                $bullets = array_filter(array_map('trim', preg_split('/[\n\r]+/', $pub['bullets'])));
+                            }
+                        ?>
+                        <article class="glass-card reveal-item" data-reveal style="--delay: <?= $delay ?>ms;">
+                            <div class="card-label"><?= h($pub['pub_type']) ?></div>
+                            <h3><?= h($pub['title']) ?></h3>
 
-                    <article class="glass-card reveal-item" data-reveal style="--delay: 120ms;">
-                        <div class="card-label">Conference</div>
-                        <h3>Fairness in Automated Decision Systems</h3>
-                        <p><strong>Presented at:</strong> ML Ethics Workshop, ICML 2024</p>
-                        <p><strong>Topic:</strong> Mitigating algorithmic bias in classification models used for hiring and credit decisions.</p>
-                        <ul>
-                            <li>Bias detection frameworks</li>
-                            <li>Fairness-aware model training</li>
-                            <li>Real-world case studies</li>
-                        </ul>
-                    </article>
+                            <?php if (!empty($pub['venue'])): ?>
+                            <p>
+                                <strong>
+                                <?php
+                                    $type = strtolower($pub['pub_type']);
+                                    if ($type === 'journal')     echo 'Published in:';
+                                    elseif ($type === 'conference' || $type === 'workshop') echo 'Presented at:';
+                                    else echo 'Available on:';
+                                ?>
+                                </strong>
+                                <?php if (!empty($pub['venue_url'])): ?>
+                                    <a href="<?= h($pub['venue_url']) ?>" target="_blank" rel="noopener noreferrer"><?= h($pub['venue']) ?></a>
+                                <?php else: ?>
+                                    <?= h($pub['venue']) ?>
+                                <?php endif; ?>
+                            </p>
+                            <?php endif; ?>
 
-                    <article class="glass-card reveal-item" data-reveal style="--delay: 240ms;">
-                        <div class="card-label">Preprint</div>
-                        <h3>Graph Neural Networks for Social Networks</h3>
-                        <p><strong>Available on:</strong> <a href="https://arxiv.org/" target="_blank" rel="noopener noreferrer">arXiv</a></p>
-                        <p><strong>Topic:</strong> Novel GNN architecture for community detection and influence propagation in large-scale social networks.</p>
-                        <ul>
-                            <li>Scalable graph convolution</li>
-                            <li>Community structure learning</li>
-                            <li>Experiments on 10M+ node graphs</li>
-                        </ul>
-                    </article>
+                            <p><strong>Year:</strong> <?= h($pub['pub_year']) ?></p>
+
+                            <?php if (!empty($pub['topic'])): ?>
+                            <p><strong>Topic:</strong> <?= h($pub['topic']) ?></p>
+                            <?php endif; ?>
+
+                            <?php if (!empty($bullets)): ?>
+                            <ul>
+                                <?php foreach ($bullets as $b): ?>
+                                    <li><?= h($b) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
+                        </article>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </section>
 
@@ -184,4 +210,4 @@
     <script src="achievement-detail.js"></script>
 </body>
 </html>
-                
+
