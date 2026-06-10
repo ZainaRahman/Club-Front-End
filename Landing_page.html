@@ -98,6 +98,7 @@
         <div class="container">
             <div class="logo">K-MiNDS</div>
             <div class="log-sign-section">
+                <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">Dark Mode</button>
                 <?php if ($isLoggedIn): ?>
                     <div class="profile-section">
                         <div class="profile-circle" onclick="toggleProfileDropdown()" title="<?php echo htmlspecialchars($username); ?>">
@@ -107,6 +108,15 @@
                                     <div class="profile-dropdown-username"><?php echo htmlspecialchars($username); ?></div>
                                     <div class="profile-dropdown-email"><?php echo htmlspecialchars($_SESSION['email']); ?></div>
                                 </div>
+                                <?php if ($isAdmin): ?>
+                                <a class="profile-dropdown-item" href="admin_dashboard.php">
+                                    🛡️ Admin Panel
+                                </a>
+                                <?php else: ?>
+                                <a class="profile-dropdown-item" href="member_dashboard.php">
+                                    Member Dashboard
+                                </a>
+                                <?php endif; ?>
                                 <a class="profile-dropdown-item" href="change_password.php">
                                     Change Password
                                 </a>
@@ -131,6 +141,7 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#focus">Our Focus</a></li>
                 <li><a href="#activities">Activities</a></li>
+                <li><a href="#achievements">Achievements</a></li>
                 <li><a href="projects.html">Projects</a></li>
                 <li><a href="#join">Join Us</a></li>
             </ul>
@@ -155,6 +166,39 @@
                     <p>K-MiNDS is a platform for students passionate about Machine Intelligence, Artificial Intelligence, and Data Science. We bring together like-minded individuals to explore, learn, and innovate in the rapidly evolving field of intelligent systems.</p>
                     <p>Our mission is to foster a community that bridges the gap between theoretical knowledge and practical applications, enabling students to gain hands-on experience and develop expertise in cutting-edge technologies.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stats" class="live-stats">
+        <div class="container">
+            <div class="section-heading reveal-on-scroll" data-reveal>
+                <p class="section-eyebrow">Live statistics</p>
+                <h2>Club growth in numbers</h2>
+                <p>Animated counters that highlight the scale of the community and the output it produces.</p>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card reveal-on-scroll" data-reveal>
+                    <div class="stat-number" data-counter="150">0</div>
+                    <h3>Members</h3>
+                </article>
+                <article class="stat-card reveal-on-scroll" data-reveal>
+                    <div class="stat-number" data-counter="48">0</div>
+                    <h3>Projects</h3>
+                </article>
+                <article class="stat-card reveal-on-scroll" data-reveal>
+                    <div class="stat-number" data-counter="26">0</div>
+                    <h3>Workshops</h3>
+                </article>
+                <article class="stat-card reveal-on-scroll" data-reveal>
+                    <div class="stat-number" data-counter="12">0</div>
+                    <h3>Research Papers</h3>
+                </article>
+                <article class="stat-card reveal-on-scroll" data-reveal>
+                    <div class="stat-number" data-counter="9">0</div>
+                    <h3>Competitions Won</h3>
+                </article>
             </div>
         </div>
     </section>
@@ -206,7 +250,7 @@
                 </div>
                 <div class="activity-item">
                     <h3>💡 Projects & Competitions</h3>
-                    <p>Engage in collaborative projects and participate in hackathons and competitions.</p>
+                    <p>Engage in collaborative projects and participate in competitions.</p>
                 </div>
                 <div class="activity-item">
                     <h3>👥 Seminar Series</h3>
@@ -220,43 +264,96 @@
         </div>
     </section>
 
+    <section id="achievements" class="achievements">
+        <div class="container">
+            <div class="section-heading reveal-on-scroll" data-reveal>
+                <p class="section-eyebrow">Club milestones</p>
+                <h2>Achievement Showcase</h2>
+                <p>Highlights of the results our members create through competitions, learning, and research.</p>
+            </div>
+
+            <div class="achievement-grid">
+                <a class="achievement-card-link" href="competition-wins.php" aria-label="Open competition wins details">
+                    <article class="achievement-card reveal-on-scroll" data-reveal style="--delay: 0ms;">
+                        <div class="achievement-icon">🏆</div>
+                        <div class="achievement-meta">Competition wins</div>
+                        <h3>Podium finishes and ranked placements</h3>
+                        <p>Celebrating top results from club-led and inter-university competitions, challenge tracks, and showcase events.</p>
+                        <ul>
+                            <li>Problem-solving contests</li>
+                            <li>Team challenge wins</li>
+                            <li>Recognition for innovation</li>
+                        </ul>
+                        <div class="achievement-card-cta">Open the full competition story</div>
+                    </article>
+                </a>
+
+                <a class="achievement-card-link" href="publications.html" aria-label="Open publications details">
+                    <article class="achievement-card reveal-on-scroll" data-reveal style="--delay: 360ms;">
+                        <div class="achievement-icon">📄</div>
+                        <div class="achievement-meta">Publications</div>
+                        <h3>Research outputs and write-ups</h3>
+                        <p>Projects that lead to papers, posters, blogs, and documented findings shared with the wider community.</p>
+                        <ul>
+                            <li>Conference papers</li>
+                            <li>Poster and abstract submissions</li>
+                            <li>Technical articles</li>
+                        </ul>
+                        <div class="achievement-card-cta">Read the publication trail</div>
+                    </article>
+                </a>
+
+            </div>
+
+          
+        </div>
+    </section>
+
     <section class="upcoming-events">
         <div class="container">
             <h2>Upcoming Events</h2>
+            <?php
+            // Connect and fetch upcoming events from DB
+            $evConn = mysqli_connect("localhost", "root", "", "club_db");
+            $dbEvents = [];
+            if ($evConn) {
+                // Auto-create table in case admin hasn't run the dashboard yet
+                mysqli_query($evConn, "CREATE TABLE IF NOT EXISTS club_events (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(200) NOT NULL,
+                    event_date DATE NOT NULL,
+                    month_label VARCHAR(10) NOT NULL,
+                    day_label VARCHAR(5) NOT NULL,
+                    description TEXT DEFAULT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )");
+                $evRes = mysqli_query($evConn, "SELECT * FROM club_events ORDER BY event_date ASC");
+                while ($evRow = mysqli_fetch_assoc($evRes)) $dbEvents[] = $evRow;
+                mysqli_close($evConn);
+            }
+            ?>
+            <?php if (!empty($dbEvents)): ?>
             <div class="events-carousel-wrapper">
                 <div class="events-carousel" id="eventsCarousel">
+                    <?php foreach ($dbEvents as $ev): ?>
                     <div class="event-card">
                         <div class="event-date">
-                            <span class="month">Sep</span>
-                            <span class="day">15</span>
+                            <span class="month"><?= htmlspecialchars($ev['month_label']) ?></span>
+                            <span class="day"><?= htmlspecialchars($ev['day_label']) ?></span>
                         </div>
                         <div class="event-details">
-                            <h3>AI Workshop Series</h3>
-                            <p class="event-description">A hands-on workshop on AI fundamentals and applications.</p>
+                            <h3><?= htmlspecialchars($ev['title']) ?></h3>
+                            <?php if (!empty($ev['description'])): ?>
+                            <p class="event-description"><?= htmlspecialchars($ev['description']) ?></p>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div class="event-card">
-                        <div class="event-date">
-                            <span class="month">Oct</span>
-                            <span class="day">10</span>
-                        </div>
-                        <div class="event-details">
-                            <h3>Data Science Hackathon</h3>
-                            <p class="event-description">A 24-hour hackathon focused on data-driven problem-solving.</p>
-                        </div>
-                    </div>
-                    <div class="event-card">
-                        <div class="event-date">
-                            <span class="month">Nov</span>
-                            <span class="day">05</span>
-                        </div>
-                        <div class="event-details">
-                            <h3>Guest Lecture</h3>
-                            <p class="event-description">Dr. Jane Doe on "The Future of Machine Learning".</p>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
+            <?php else: ?>
+            <p class="events-empty">No upcoming events yet. Check back soon!</p>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -346,63 +443,28 @@
         </div>
     </footer>
 
+    <!-- Login iframe overlay -->
     <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLoginModal()">&times;</span>
-            <h2>Login</h2>
-            <form action="login.php" method="POST">
-                <div class="form-group">
-                    <label for="login-email">Email:</label>
-                    <input type="email" id="login-email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" name="password" required>
-                </div>
-                <button type="submit" name="submit" class="form-btn">Login</button>
-            </form>
-            <p class="toggle-form">Don't have an account? <a href="#" onclick="closeLoginModal(); signuppage()">Sign Up</a></p>
+        <div class="modal-content modal-iframe-wrap">
+            <span class="close modal-iframe-close" onclick="closeLoginModal()">&times;</span>
+            <iframe id="loginFrame" src="login.php" frameborder="0" class="modal-iframe"></iframe>
         </div>
     </div>
 
+    <!-- Signup iframe overlay -->
     <div id="signupModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeSignupModal()">&times;</span>
-            <h2>Sign Up</h2>
-            <form action="signup.php" method="POST">
-                <div class="form-group">
-                    <label for="signup-name">Full Name:</label>
-                    <input type="text" id="signup-name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-email">Email:</label>
-                    <input type="email" id="signup-email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-password">Password:</label>
-                    <input type="password" id="signup-password" name="password" required>
-                    <small style="color: #666; display: block; margin-top: 5px;">
-                        Must have: 8+ characters, 1 uppercase, 1 lowercase, 1 number
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label for="signup-confirm">Confirm Password:</label>
-                    <input type="password" id="signup-confirm" name="confirm" required>
-                </div>
-                <button type="submit" name="submit" class="form-btn">Sign Up</button>
-            </form>
-            <p class="toggle-form">Already have an account? <a href="#" onclick="closeSignupModal(); loginpage()">Login</a></p>
+        <div class="modal-content modal-iframe-wrap">
+            <span class="close modal-iframe-close" onclick="closeSignupModal()">&times;</span>
+            <iframe id="signupFrame" src="signup.php" frameborder="0" class="modal-iframe"></iframe>
         </div>
     </div>
     <script src="Landing_page.js"></script>
     <script>
-        // Toggle profile dropdown
+        // ── Profile dropdown ──────────────────────────────────────────────────────
         function toggleProfileDropdown() {
             const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('active');
+            if (dropdown) dropdown.classList.toggle('active');
         }
-        
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const profileCircle = document.querySelector('.profile-circle');
             const dropdown = document.getElementById('profileDropdown');
@@ -410,23 +472,36 @@
                 dropdown.classList.remove('active');
             }
         });
-        
-        // Check if signup or login was successful
+
+        // ── Listen for messages posted from inside the iframes ────────────────────
+        // login.php / signup.php call window.parent.postMessage(...) on success
+        window.addEventListener('message', function(event) {
+            // Only accept messages from same origin
+            if (event.origin !== window.location.origin) return;
+
+            const { type, redirect } = event.data || {};
+
+            if (type === 'login_success') {
+                closeLoginModal();
+                window.location.href = redirect || 'Landing_page.php';
+            }
+
+            if (type === 'signup_success') {
+                closeSignupModal();
+                // Open login modal so they can log in
+                loginpage();
+            }
+        });
+
+        // ── URL param handling (direct navigation fallback) ───────────────────────
         window.addEventListener('load', function() {
             const params = new URLSearchParams(window.location.search);
             if (params.get('signup_success') === 'true') {
-                // Remove the parameter from URL
                 window.history.replaceState({}, document.title, window.location.pathname);
-                // Show alert and open login
-                alert('✓ Sign up successful! Please log in with your credentials.');
                 loginpage();
             }
             if (params.get('login_success') === 'true') {
-                // Remove the parameter from URL
                 window.history.replaceState({}, document.title, window.location.pathname);
-                // Show welcome message
-                alert('✓ Login successful!');
-                // Reload page to show profile circle
                 location.reload();
             }
             if (params.get('password_changed') === 'true') {

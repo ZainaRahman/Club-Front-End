@@ -11,6 +11,15 @@
     --light-bg: #ecf0f1;
     --text-color: #2c3e50;
     --gray-text: #7f8c8d;
+    --surface-color: #ffffff;
+    --surface-muted: #eef5fb;
+    --section-bg: #ffffff;
+    --card-bg: #ffffff;
+    --card-border: rgba(9, 42, 75, 0.08);
+    --theme-toggle-bg: #eef5fb;
+    --theme-toggle-text: #092a4b;
+    --theme-toggle-border: rgba(9, 42, 75, 0.14);
+    --glow-color: rgba(52, 152, 219, 0.22);
 }
 
 body {
@@ -18,6 +27,197 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     overflow-x: hidden;
+    transition: background-color 320ms ease, color 320ms ease;
+}
+
+body,
+.navbar,
+.hero,
+.about,
+.live-stats,
+.focus-areas,
+.activities,
+.achievements,
+.upcoming-events,
+.member-registration-link,
+.cta,
+.footer,
+.modal-content,
+.activity-item,
+.achievement-card,
+.event-card,
+.team-member-card,
+.stat-card {
+    transition: background-color 320ms ease, color 320ms ease, border-color 320ms ease, box-shadow 320ms ease, transform 320ms ease;
+}
+
+body[data-theme='dark'] {
+    --primary-color: #8cc7ff;
+    --accent-color: #4fd1ff;
+    --accent-dark: #19b6ff;
+    --light-bg: #09111d;
+    --text-color: #eaf2ff;
+    --gray-text: #a7bed9;
+    --surface-color: #0f1a2d;
+    --surface-muted: #13233b;
+    --section-bg: #0b1626;
+    --card-bg: #101c30;
+    --card-border: rgba(79, 209, 255, 0.16);
+    --theme-toggle-bg: linear-gradient(135deg, rgba(14, 23, 40, 0.95), rgba(19, 36, 61, 0.95));
+    --theme-toggle-text: #eaf2ff;
+    --theme-toggle-border: rgba(79, 209, 255, 0.22);
+    --glow-color: rgba(79, 209, 255, 0.28);
+    background:
+        radial-gradient(circle at top left, rgba(79, 209, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(76, 0, 255, 0.14), transparent 24%),
+        linear-gradient(180deg, #07111f 0%, #0b1626 100%);
+}
+
+body[data-theme='dark'] .navbar {
+    background: rgba(5, 10, 20, 0.92);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), 0 0 32px rgba(79, 209, 255, 0.08);
+}
+
+body[data-theme='dark'] .hero,
+body[data-theme='dark'] .about,
+body[data-theme='dark'] .live-stats,
+body[data-theme='dark'] .focus-areas,
+body[data-theme='dark'] .activities,
+body[data-theme='dark'] .achievements,
+body[data-theme='dark'] .upcoming-events,
+body[data-theme='dark'] .member-registration-link,
+body[data-theme='dark'] .cta,
+body[data-theme='dark'] .footer {
+    background: var(--section-bg);
+    color: var(--text-color);
+}
+
+body[data-theme='dark'] .about,
+body[data-theme='dark'] .live-stats,
+body[data-theme='dark'] .activities,
+body[data-theme='dark'] .achievements,
+body[data-theme='dark'] .member-registration-link,
+body[data-theme='dark'] .footer {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+}
+
+body[data-theme='dark'] .hero,
+body[data-theme='dark'] .cta,
+body[data-theme='dark'] .upcoming-events {
+    background: linear-gradient(135deg, #07111f 0%, #0d1a2b 100%);
+}
+
+body[data-theme='dark'] .navbar .logo,
+body[data-theme='dark'] .hero-content h1,
+body[data-theme='dark'] .about h2,
+body[data-theme='dark'] .focus-areas h2,
+body[data-theme='dark'] .activities h2,
+body[data-theme='dark'] .achievements h2,
+body[data-theme='dark'] .live-stats h2,
+body[data-theme='dark'] .member-registration-link h3,
+body[data-theme='dark'] .cta h2,
+body[data-theme='dark'] .modal-content h2 {
+    color: #f3f8ff;
+    text-shadow: 0 0 18px rgba(79, 209, 255, 0.14);
+}
+
+body[data-theme='dark'] .nav-links a,
+body[data-theme='dark'] .about-text p,
+body[data-theme='dark'] .hero-subtitle,
+body[data-theme='dark'] .section-heading p,
+body[data-theme='dark'] .activity-item p,
+body[data-theme='dark'] .achievement-card p,
+body[data-theme='dark'] .event-description,
+body[data-theme='dark'] .member-registration-link p,
+body[data-theme='dark'] .cta > p,
+body[data-theme='dark'] .footer p,
+body[data-theme='dark'] .toggle-form,
+body[data-theme='dark'] .stat-card p,
+body[data-theme='dark'] .stat-card h3 {
+    color: var(--gray-text);
+}
+
+body[data-theme='dark'] .about,
+body[data-theme='dark'] .activities,
+body[data-theme='dark'] .member-registration-link,
+body[data-theme='dark'] .footer,
+body[data-theme='dark'] .modal-content {
+    background-color: rgba(15, 26, 45, 0.98);
+}
+
+body[data-theme='dark'] .activity-item,
+body[data-theme='dark'] .achievement-card,
+body[data-theme='dark'] .event-card,
+body[data-theme='dark'] .team-member-card,
+body[data-theme='dark'] .stat-card {
+    background: linear-gradient(180deg, rgba(16, 28, 48, 0.96), rgba(10, 18, 31, 0.96));
+    border-color: var(--card-border);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28), 0 0 24px rgba(79, 209, 255, 0.06);
+}
+
+body[data-theme='dark'] .carousel__item-body,
+body[data-theme='dark'] .event-card::before,
+body[data-theme='dark'] .member-avatar {
+    background-color: #101c30;
+}
+
+body[data-theme='dark'] .theme-toggle {
+    background: var(--theme-toggle-bg);
+    color: var(--theme-toggle-text);
+    border-color: var(--theme-toggle-border);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24), 0 0 20px rgba(79, 209, 255, 0.08);
+}
+
+body[data-theme='dark'] .theme-toggle:hover {
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3), 0 0 24px rgba(79, 209, 255, 0.16);
+}
+
+body[data-theme='dark'] button#log-in-btn,
+body[data-theme='dark'] button#sign-up-btn,
+body[data-theme='dark'] .btn-primary,
+body[data-theme='dark'] .btn-secondary,
+body[data-theme='dark'] .registration-btn,
+body[data-theme='dark'] .social-btn,
+body[data-theme='dark'] .form-btn,
+body[data-theme='dark'] .pill-link,
+body[data-theme='dark'] .pill-cta,
+body[data-theme='dark'] .hero-btn {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22), 0 0 18px rgba(79, 209, 255, 0.12);
+}
+
+body[data-theme='dark'] .btn-secondary,
+body[data-theme='dark'] .hero-btn.secondary,
+body[data-theme='dark'] .pill-link {
+    background: rgba(255, 255, 255, 0.06);
+    color: #eaf2ff;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body[data-theme='dark'] .section-heading .section-eyebrow,
+body[data-theme='dark'] .achievement-meta,
+body[data-theme='dark'] .card-kicker,
+body[data-theme='dark'] .stat-number,
+body[data-theme='dark'] .live-stats .section-eyebrow {
+    color: #8fdcff;
+}
+
+body[data-theme='dark'] .about h2,
+body[data-theme='dark'] .focus-areas h2,
+body[data-theme='dark'] .activities h2,
+body[data-theme='dark'] .achievements h2,
+body[data-theme='dark'] .live-stats h2,
+body[data-theme='dark'] .cta h2,
+body[data-theme='dark'] .member-registration-link h3 {
+    text-shadow: 0 0 20px rgba(79, 209, 255, 0.12);
+}
+
+body[data-theme='dark'] .about-text p,
+body[data-theme='dark'] .toggle-form,
+body[data-theme='dark'] .footer p,
+body[data-theme='dark'] .member-registration-link p,
+body[data-theme='dark'] .cta > p,
+body[data-theme='dark'] .section-heading p:last-child {
+    color: #b0c7de;
 }
 
 .container {
@@ -29,6 +229,24 @@ body {
 .log-sign-section {
     display: flex;
     gap: 1rem;
+    align-items: center;
+}
+
+.theme-toggle {
+    border: 1px solid var(--theme-toggle-border);
+    background: var(--theme-toggle-bg);
+    color: var(--theme-toggle-text);
+    border-radius: 999px;
+    cursor: pointer;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(52, 152, 219, 0.18);
 }
 
 button#log-in-btn, button#sign-up-btn {
@@ -209,6 +427,70 @@ button#log-in-btn:hover, button#sign-up-btn:hover {
 .about-content {
     max-width: 800px;
     margin: 0 auto;
+}
+
+.live-stats {
+    padding: 80px 20px;
+    background: linear-gradient(180deg, #f8fcff 0%, #eef5fb 100%);
+}
+
+.live-stats .section-heading {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    text-align: center;
+}
+
+.live-stats .section-heading h2 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.live-stats .section-heading p:last-child {
+    color: var(--gray-text);
+    line-height: 1.8;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.stat-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(238, 245, 251, 0.96));
+    border: 1px solid rgba(9, 42, 75, 0.08);
+    border-radius: 20px;
+    padding: 24px 18px;
+    text-align: center;
+    box-shadow: 0 14px 36px rgba(9, 42, 75, 0.08);
+    transform: translateY(18px);
+    opacity: 0;
+}
+
+.stat-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stat-number {
+    font-size: clamp(2.1rem, 4vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    text-shadow: 0 0 18px rgba(52, 152, 219, 0.08);
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.live-stats .section-heading .section-eyebrow {
+    color: var(--accent-dark);
 }
 
 .about-text p {
@@ -485,6 +767,286 @@ button#log-in-btn:hover, button#sign-up-btn:hover {
     color: var(--gray-text);
     font-size: 0.95rem;
     line-height: 1.6;
+}
+/* Achievement Showcase Styles */
+
+.achievements {
+    position: relative;
+    padding: 96px 20px 104px;
+    background:
+        radial-gradient(circle at top center, rgba(52, 152, 219, 0.08), transparent 34%),
+        linear-gradient(180deg, #f8fcff 0%, #eef5fb 100%);
+    overflow: hidden;
+}
+
+.achievements > .container {
+    max-width: none;
+    width: min(1600px, calc(100% - 32px));
+}
+
+.section-heading {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+
+.section-eyebrow {
+    display: inline-block;
+    margin-bottom: 0.85rem;
+    color: var(--accent-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.section-heading h2,
+.achievements h2 {
+    color: var(--primary-color);
+    font-size: clamp(2rem, 3vw, 3rem);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.section-heading p:last-child {
+    color: var(--gray-text);
+    line-height: 1.9;
+    font-size: 1.08rem;
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+}
+
+.achievement-aside {
+    position: absolute;
+    right: 40px;
+    top: 280px;
+    width: 340px;
+    height: 420px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 24px 52px rgba(9, 42, 75, 0.16);
+}
+
+.achievement-aside img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.achievement-aside::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.24), rgba(9, 42, 75, 0.16));
+    pointer-events: none;
+}
+
+.achievement-card-link {
+    display: flex;
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+}
+
+.achievement-card-link:focus-visible {
+    outline: none;
+}
+
+.achievement-card-link:focus-visible .achievement-card {
+    border-color: rgba(52, 152, 219, 0.38);
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.14), 0 20px 42px rgba(9, 42, 75, 0.14);
+}
+
+.achievement-card {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 249, 253, 0.96));
+    border: 1px solid rgba(9, 42, 75, 0.08);
+    border-radius: 28px;
+    padding: clamp(28px, 3vw, 44px);
+    box-shadow: 0 18px 46px rgba(9, 42, 75, 0.09);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    width: 100%;
+    transform: translateY(28px);
+    opacity: 0;
+    transition: opacity 600ms ease var(--delay, 0ms),
+                transform 600ms ease var(--delay, 0ms),
+                box-shadow 240ms ease,
+                border-color 240ms ease,
+                background 240ms ease;
+}
+
+.achievement-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.achievement-card.is-visible:hover {
+    transform: translateY(-8px);
+}
+
+.achievement-card::before {
+    content: '';
+    position: absolute;
+    inset: -60px -70px auto auto;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.14), transparent 66%);
+    transition: transform 180ms ease;
+    pointer-events: none;
+}
+
+.achievement-card::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-dark));
+}
+
+.achievement-card.is-visible:hover {
+    border-color: rgba(52, 152, 219, 0.24);
+    box-shadow: 0 26px 54px rgba(9, 42, 75, 0.14);
+}
+
+.achievement-card:hover::before {
+    transform: scale(1.008);
+}
+
+.achievement-icon {
+    width: 92px;
+    height: 92px;
+    border-radius: 28px;
+    display: grid;
+    place-items: center;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.14), rgba(9, 42, 75, 0.08));
+    margin-bottom: 26px;
+}
+
+.achievement-meta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: rgba(52, 152, 219, 0.1);
+    color: var(--primary-color);
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.achievement-card h3 {
+    color: var(--primary-color);
+    font-size: clamp(1.7rem, 2vw, 2rem);
+    line-height: 1.16;
+    margin-bottom: 18px;
+}
+
+.achievement-card p {
+    color: var(--gray-text);
+    line-height: 1.95;
+    margin-bottom: 20px;
+    font-size: 1.08rem;
+    max-width: 48ch;
+}
+
+.achievement-card ul {
+    list-style: none;
+    display: grid;
+    gap: 16px;
+    margin-top: 2px;
+}
+
+.achievement-card li {
+    position: relative;
+    padding-left: 24px;
+    color: var(--text-color);
+    font-size: 1.04rem;
+    line-height: 1.55;
+}
+
+.achievement-card li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.78em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-dark));
+    transform: translateY(-50%);
+}
+
+.achievement-card-cta {
+    margin-top: auto;
+    padding-top: 28px;
+    color: var(--accent-dark);
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.achievement-card-cta::after {
+    content: ' →';
+    transition: transform 180ms ease;
+    display: inline-block;
+}
+
+.achievement-card-link:hover .achievement-card-cta::after,
+.achievement-card-link:focus-visible .achievement-card-cta::after {
+    transform: translateX(3px);
+}
+
+
+
+@media (max-width: 1080px) {
+    .achievements > .container {
+        width: min(100%, calc(100% - 32px));
+    }
+
+    .achievement-aside {
+        right: 20px;
+        top: 260px;
+        width: 280px;
+        height: 360px;
+    }
+
+    .achievement-grid {
+        grid-template-columns: 1fr;
+        max-width: 860px;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .achievement-aside {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .achievement-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .upcoming-events {
@@ -1156,6 +1718,48 @@ button#log-in-btn:hover, button#sign-up-btn:hover {
     color: var(--accent-dark);
 }
 
+/* ── Iframe overlay modal ────────────────────────────────────────── */
+.modal-iframe-wrap {
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 520px;
+    width: 92%;
+    position: relative;
+    background: transparent;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+}
+
+.modal-iframe {
+    display: block;
+    width: 100%;
+    height: 560px;
+    border: none;
+    border-radius: 16px;
+    background: white;
+}
+
+/* Signup iframe is taller due to more fields */
+#signupModal .modal-iframe {
+    height: 680px;
+}
+
+.modal-iframe-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    z-index: 10;
+    font-size: 26px;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.modal-iframe-close:hover {
+    color: var(--primary-color);
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -1179,3 +1783,35 @@ button#log-in-btn:hover, button#sign-up-btn:hover {
 
 
 
+
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .log-sign-section {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .theme-toggle {
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .live-stats,
+    .achievements,
+    .about,
+    .activities,
+    .upcoming-events,
+    .member-registration-link,
+    .cta {
+        padding-top: 64px;
+        padding-bottom: 64px;
+    }
+}

@@ -1,8 +1,14 @@
 <?php
 session_start();
-$isLoggedIn = isset($_SESSION['username']);
+
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+$isLoggedIn = isset($_SESSION["username"]);
+$isAdmin    = $isLoggedIn && ($_SESSION["role"] ?? "member") === "admin"; // store admin flag
 $username = $isLoggedIn ? $_SESSION['username'] : '';
-// Get initials
+
 $initials = '';
 if ($isLoggedIn) {
     $nameParts = explode(' ', $username);
