@@ -22,25 +22,42 @@ if (isset($_POST['submit'])) {
         if (!$connection) {
             $errors[] = "Connection Failed: " . mysqli_connect_error();
         } else {
-            // Check if email and password match in database
-            $login_query = "SELECT username, email FROM club_table WHERE email = '$email' AND password = '$password' LIMIT 1";
+            // ✅ escape input, fetch hashed password + role, verify with password_verify()
+            $safe_email  = mysqli_real_escape_string($connection, $email);
+            $login_query = "SELECT username, email, password, role FROM club_table WHERE email = '$safe_email' LIMIT 1";
             $login_result = mysqli_query($connection, $login_query);
 
             if (!$login_result) {
                 $errors[] = "Query Failed: " . mysqli_error($connection);
             } elseif (mysqli_num_rows($login_result) > 0) {
-                // Login successful
                 $row = mysqli_fetch_assoc($login_result);
-                $_SESSION['username'] = $row['username'];
-                $_SESSION['email'] = $row['email'];
-                mysqli_close($connection);
-                header("Location: Landing_page.php?login_success=true");
-                exit();
+                if (password_verify($password, $row['password'])) {
+                    // ✅ regenerate session ID on login to prevent session fixation
+                    session_regenerate_id(true);
+                    $_SESSION['username'] = $row['username'];
+                    $_SESSION['email']    = $row['email'];
+                    $_SESSION['role']     = $row['role'] ?? 'member'; // ✅ store role in session
+                    mysqli_close($connection);
+                    // Determine redirect target
+                    $redirectTo = ($_SESSION['role'] === 'admin') ? 'admin_dashboard.php' : 'Landing_page.php';
+                    // If loaded inside an iframe on the landing page, notify parent
+                    // Otherwise do a normal redirect
+                    ?>
+                    <script>
+                        if (window.parent !== window) {
+                            window.parent.postMessage({ type: 'login_success', redirect: '<?= $redirectTo ?>' }, window.location.origin);
+                        } else {
+                            window.location.href = '<?= $redirectTo ?>';
+                        }
+                    </script>
+                    <?php
+                    exit();
+                } else {
+                    $errors[] = "Invalid Email or Password";
+                }
             } else {
                 $errors[] = "Invalid Email or Password";
             }
-
-            mysqli_close($connection);
         }
     }
 }
