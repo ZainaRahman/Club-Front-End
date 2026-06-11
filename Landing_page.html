@@ -389,7 +389,6 @@
 
        
         window.addEventListener('message', function(event) {
-            // Only accept messages from same origin
             if (event.origin !== window.location.origin) return;
 
             const { type, redirect } = event.data || {};
