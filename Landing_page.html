@@ -5,93 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-MiNDS | Machine Intelligence and Data Science</title>
     <link rel="stylesheet" href="Landing_page.css">
-    <style>
-        body.modal-open {
-            overflow: hidden;
-        }
-        
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .profile-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .profile-circle:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        
-        .profile-dropdown {
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: 180px;
-            display: none;
-            z-index: 1000;
-            color: #333;
-        }
-        
-        .profile-dropdown.active {
-            display: block;
-        }
-        
-        .profile-dropdown-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            font-size: 14px;
-            display: block;
-            text-decoration: none;
-            color: #333;
-        }
-        
-        .profile-dropdown-item:last-child {
-            border-bottom: none;
-        }
-        
-        .profile-dropdown-item:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .profile-dropdown-username {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .profile-dropdown-email {
-            color: #666;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-        
-        .profile-logout-btn {
-            color: #d32f2f;
-            font-weight: 500;
-        }
-        
-        .profile-logout-btn:hover {
-            background-color: #ffebee !important;
-        }
-    </style>
+    <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
     <nav class="navbar">
@@ -367,9 +281,9 @@
                             <span class="avatar-initials">JD</span>
                         </div>
                         <div class="member-info">
-                            <h3>John Doe</h3>
+                            <h3>Suhita Islam Aurthi</h3>
                             <p class="member-role">President</p>
-                            <p class="member-detail">Batch 2023</p>
+                            <p class="member-detail">Batch 2022</p>
                         </div>
                     </div>
                     <div class="team-member-card" style="--delay: 0.2s;">
@@ -377,9 +291,9 @@
                             <span class="avatar-initials">JS</span>
                         </div>
                         <div class="member-info">
-                            <h3>Jane Smith</h3>
+                            <h3>Shahira Alima</h3>
                             <p class="member-role">Vice President</p>
-                            <p class="member-detail">Batch 2023</p>
+                            <p class="member-detail">Batch 2022</p>
                         </div>
                     </div>
                     <div class="team-member-card" style="--delay: 0.4s;">
@@ -387,9 +301,9 @@
                             <span class="avatar-initials">MJ</span>
                         </div>
                         <div class="member-info">
-                            <h3>Mike Johnson</h3>
+                            <h3>Mahmuda Rahaman</h3>
                             <p class="member-role">Treasurer</p>
-                            <p class="member-detail">Batch 2024</p>
+                            <p class="member-detail">Batch 2022</p>
                         </div>
                     </div>
                     <div class="team-member-card" style="--delay: 0.6s;">
@@ -397,9 +311,9 @@
                             <span class="avatar-initials">SR</span>
                         </div>
                         <div class="member-info">
-                            <h3>Sarah Rodriguez</h3>
+                            <h3>Zaina Rahman</h3>
                             <p class="member-role">Events Coordinator</p>
-                            <p class="member-detail">Batch 2024</p>
+                            <p class="member-detail">Batch 2022</p>
                         </div>
                     </div>
                     <div class="team-member-card" style="--delay: 0.8s;">
@@ -407,9 +321,9 @@
                             <span class="avatar-initials">AK</span>
                         </div>
                         <div class="member-info">
-                            <h3>Ahmed Khan</h3>
+                            <h3>Riya Khan</h3>
                             <p class="member-role">Technical Lead</p>
-                            <p class="member-detail">Batch 2023</p>
+                            <p class="member-detail">Batch 2022</p>
                         </div>
                     </div>
                 </div>
@@ -460,7 +374,7 @@
     </div>
     <script src="Landing_page.js"></script>
     <script>
-        // ── Profile dropdown ──────────────────────────────────────────────────────
+     
         function toggleProfileDropdown() {
             const dropdown = document.getElementById('profileDropdown');
             if (dropdown) dropdown.classList.toggle('active');
@@ -473,8 +387,7 @@
             }
         });
 
-        // ── Listen for messages posted from inside the iframes ────────────────────
-        // login.php / signup.php call window.parent.postMessage(...) on success
+       
         window.addEventListener('message', function(event) {
             // Only accept messages from same origin
             if (event.origin !== window.location.origin) return;
@@ -488,12 +401,11 @@
 
             if (type === 'signup_success') {
                 closeSignupModal();
-                // Open login modal so they can log in
+    
                 loginpage();
             }
         });
 
-        // ── URL param handling (direct navigation fallback) ───────────────────────
         window.addEventListener('load', function() {
             const params = new URLSearchParams(window.location.search);
             if (params.get('signup_success') === 'true') {

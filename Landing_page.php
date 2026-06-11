@@ -6,7 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 $isLoggedIn = isset($_SESSION["username"]);
-$isAdmin    = $isLoggedIn && ($_SESSION["role"] ?? "member") === "admin"; // store admin flag
+$isAdmin    = $isLoggedIn && ($_SESSION["role"] ?? "member") === "admin";
 $username = $isLoggedIn ? $_SESSION['username'] : '';
 
 $initials = '';

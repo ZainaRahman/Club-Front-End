@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const numOriginalItems = originalItems.length;
         if (numOriginalItems === 0) return;
 
-        // Calculate how wide one full set of original cards is
+       
         function getSetWidth() {
             const firstCard = eventsCarousel.querySelector('.event-card');
             const cardWidth = firstCard ? firstCard.offsetWidth : 380;
@@ -202,16 +202,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return (numOriginalItems * cardWidth) + (numOriginalItems * gap);
         }
 
-        // Clone enough sets so total content is at least 3× the viewport width
-        // This ensures clones are never visible at start position
+     
         function buildClones() {
-            // Remove any previously added clones
+           
             eventsCarousel.querySelectorAll('.event-card-clone').forEach(el => el.remove());
 
             const viewportWidth = window.innerWidth;
             const setWidth = getSetWidth();
-            // Need at least enough clones to fill viewport × 3 (so we can scroll one full set
-            // and always have cards visible both before and after)
+            
             const setsNeeded = Math.ceil((viewportWidth * 3) / setWidth) + 1;
 
             for (let s = 0; s < setsNeeded; s++) {
@@ -258,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
             animate();
         }
 
-        // Rebuild on resize so clone count stays correct
+       
         window.addEventListener('resize', function() {
             if (!animationStarted) return;
             cancelAnimationFrame(animationId);
@@ -269,4 +267,5 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('load', startOnce, { once: true });
         setTimeout(startOnce, 100);
     }
+    
 });
