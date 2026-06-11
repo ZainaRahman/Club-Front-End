@@ -7,7 +7,7 @@ if (isset($_POST['submit'])) {
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-    // Validation: Empty fields
+  
     if (empty($email)) {
         $errors[] = "Email cannot be empty";
     }
@@ -15,14 +15,14 @@ if (isset($_POST['submit'])) {
         $errors[] = "Password cannot be empty";
     }
 
-    // If no errors, check database
+    
     if (empty($errors)) {
         $connection = mysqli_connect("localhost", "root", "", "club_db");
 
         if (!$connection) {
             $errors[] = "Connection Failed: " . mysqli_connect_error();
         } else {
-            // ✅ escape input, fetch hashed password + role, verify with password_verify()
+           
             $safe_email  = mysqli_real_escape_string($connection, $email);
             $login_query = "SELECT username, email, password, role FROM club_table WHERE email = '$safe_email' LIMIT 1";
             $login_result = mysqli_query($connection, $login_query);
@@ -32,16 +32,15 @@ if (isset($_POST['submit'])) {
             } elseif (mysqli_num_rows($login_result) > 0) {
                 $row = mysqli_fetch_assoc($login_result);
                 if (password_verify($password, $row['password'])) {
-                    // ✅ regenerate session ID on login to prevent session fixation
+                    
                     session_regenerate_id(true);
                     $_SESSION['username'] = $row['username'];
                     $_SESSION['email']    = $row['email'];
-                    $_SESSION['role']     = $row['role'] ?? 'member'; // ✅ store role in session
+                    $_SESSION['role']     = $row['role'] ?? 'member'; 
                     mysqli_close($connection);
-                    // Determine redirect target
+                   
                     $redirectTo = ($_SESSION['role'] === 'admin') ? 'admin_dashboard.php' : 'Landing_page.php';
-                    // If loaded inside an iframe on the landing page, notify parent
-                    // Otherwise do a normal redirect
+                    
                     ?>
                     <script>
                         if (window.parent !== window) {
@@ -67,6 +66,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
     <title>Login</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         body {
             font-family: Arial, sans-serif;

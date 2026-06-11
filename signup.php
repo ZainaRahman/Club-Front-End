@@ -10,7 +10,7 @@ if (isset($_POST['submit'])) {
     $confirm_password = isset($_POST['confirm'])  ? $_POST['confirm']        : '';
     $role             = isset($_POST['role'])     ? $_POST['role']           : 'member';
 
-    // Sanitise role — only allow known values
+   
     if (!in_array($role, ['member', 'admin'], true)) {
         $role = 'member';
     }
@@ -88,6 +88,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-MiNDS | Create Account</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <style>
         :root {
             --primary-color: #092a4b;
