@@ -16,6 +16,7 @@ function h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-MiNDS | Publications</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="achievement-detail.css">
 </head>
 <body class="achievement-page publications publications-page">

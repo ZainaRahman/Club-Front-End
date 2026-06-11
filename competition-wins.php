@@ -10,7 +10,7 @@ if ($conn) {
 }
 function h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 
-// Map result text to a display label
+
 function result_label($result) {
     $r = strtolower(trim($result));
     if (str_contains($r, 'champion') || str_contains($r, '1st') || str_contains($r, 'first') || str_contains($r, 'winner')) return 'Champion';
@@ -25,6 +25,7 @@ function result_label($result) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-MiNDS | Competition Wins</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="achievement-detail.css">
 </head>
 <body class="achievement-page competition-wins competition-wins-page">
