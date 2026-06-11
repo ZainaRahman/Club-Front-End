@@ -5,7 +5,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-// Redirect to login if not logged in
+
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
@@ -395,6 +395,7 @@ if (isset($_GET['login_success']) && $_GET['login_success'] === 'true') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K-MiNDS | Member Dashboard</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="member_dashboard.css">
 </head>
 <body class="member-dashboard-page">

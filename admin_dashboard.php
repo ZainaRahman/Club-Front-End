@@ -20,7 +20,7 @@ function h($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 $conn = mysqli_connect('localhost', 'root', '', 'club_db');
 if (!$conn) { die('DB connection failed: ' . mysqli_connect_error()); }
 
-// Auto-create club_events table
+
 mysqli_query($conn, "CREATE TABLE IF NOT EXISTS club_events (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     title       VARCHAR(200) NOT NULL,
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-    // ── Publications ──────────────────────────────────────────────
+   
     if ($action === 'add_publication') {
         $ptitle   = trim($_POST['pub_title']     ?? '');
         $ptype    = trim($_POST['pub_type']      ?? 'Journal');
@@ -296,6 +296,7 @@ mysqli_close($conn);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>K-MiNDS | Admin Panel</title>
+<link rel="icon" type="image/png" href="logo.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap');
 :root {
@@ -334,7 +335,7 @@ body::before {
     background-size: 64px 64px;
     mask-image: linear-gradient(180deg, rgba(0,0,0,0.4), transparent 90%);
 }
-/* ── Topbar ── */
+
 .topbar {
     position:sticky; top:0; z-index:100;
     background: rgba(9,42,75,0.96);
@@ -354,7 +355,7 @@ body::before {
 .topbar-right { display:flex; align-items:center; gap:12px }
 .topbar-user { color:rgba(255,255,255,0.65); font-size:0.9rem }
 .topbar-user strong { color:#fff }
-/* ── Buttons ── */
+
 .btn {
     display:inline-flex; align-items:center; justify-content:center;
     padding:0 18px; height:38px; border-radius:10px;
@@ -374,13 +375,13 @@ body::before {
 .btn-danger  { background:linear-gradient(135deg,#e74c3c,#c0392b); color:#fff; box-shadow:0 8px 20px rgba(231,76,60,0.2) }
 .btn-warn    { background:linear-gradient(135deg,#f39c12,#d68910); color:#fff; box-shadow:0 8px 20px rgba(243,156,18,0.2) }
 .btn-sm { height:32px; padding:0 12px; font-size:0.82rem; border-radius:8px }
-/* shell */
+
 .shell { position:relative; z-index:1; max-width:1400px; margin:0 auto; padding:28px 28px 80px }
-/* Alerts */
+
 .alert { padding:14px 18px; border-radius:12px; margin-bottom:20px; font-size:0.94rem; font-weight:500 }
 .alert-success { background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.25); color:#1e8449 }
 .alert-error   { background:rgba(231,76,60,0.08); border:1px solid rgba(231,76,60,0.22); color:#c0392b }
-/* Stat cards */
+
 .stats-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:28px }
 .stat-card {
     background: var(--surface); border:1px solid var(--border);
@@ -398,24 +399,24 @@ body::before {
 .stat-card.green .value { color:#27ae60 } .stat-card.green { --glow:rgba(46,204,113,0.12) }
 .stat-card.yellow .value { color:#e67e22 } .stat-card.yellow { --glow:rgba(243,156,18,0.12) }
 .stat-card.purple .value { color:#8e44ad } .stat-card.purple { --glow:rgba(142,68,173,0.12) }
-/* Sections */
+
 .section { background:var(--surface); border:1px solid var(--border); border-radius:22px; overflow:hidden; margin-bottom:24px; box-shadow:var(--shadow) }
 .section-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border); background:var(--surface2) }
 .section-head h2 { font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:10px; color:var(--accent-dark) }
 .section-icon { width:32px; height:32px; border-radius:9px; display:grid; place-items:center; font-size:1rem; background:rgba(52,152,219,0.10) }
 .section-body { padding:24px }
-/* Table */
+
 .data-table { width:100%; border-collapse:collapse }
 .data-table th { text-align:left; padding:10px 14px; font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); border-bottom:1px solid var(--border) }
 .data-table td { padding:12px 14px; border-bottom:1px solid rgba(9,42,75,0.05); font-size:0.92rem; vertical-align:middle; color:var(--text) }
 .data-table tr:last-child td { border-bottom:none }
 .data-table tr:hover td { background:rgba(52,152,219,0.03) }
-/* Badges */
+
 .role-badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:0.75rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase }
 .role-admin  { background:rgba(52,152,219,0.12); color:#1a6ab1; border:1px solid rgba(52,152,219,0.22) }
 .role-member { background:rgba(46,204,113,0.1); color:#1e8449; border:1px solid rgba(46,204,113,0.2) }
 .actions-cell { display:flex; gap:8px; flex-wrap:wrap }
-/* Form */
+
 .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px }
 .form-group { display:flex; flex-direction:column; gap:6px }
 .form-group.span2 { grid-column:1/-1 }
@@ -440,14 +441,14 @@ body::before {
 .add-form-wrap.open { display:block }
 .divider { border:none; border-top:1px solid var(--border); margin:20px 0 }
 .empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:0.95rem }
-/* Modal */
+
 .modal-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(9,42,75,0.5); backdrop-filter:blur(6px); align-items:center; justify-content:center }
 .modal-overlay.open { display:flex }
 .modal { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; width:100%; max-width:520px; box-shadow:var(--shadow); animation:slideUp 200ms ease }
 @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 .modal h3 { font-size:1.2rem; font-weight:700; margin-bottom:20px; color:var(--accent-dark) }
 .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px }
-/* Responsive */
+
 @media(max-width:900px){ .stats-row{grid-template-columns:1fr 1fr} .form-grid{grid-template-columns:1fr} .form-group.span2{grid-column:auto} }
 @media(max-width:600px){ .shell{padding:16px 14px 60px} .topbar{padding:0 16px} .stats-row{grid-template-columns:1fr} .data-table th:nth-child(2),.data-table td:nth-child(2){display:none} }
 </style>
@@ -498,7 +499,7 @@ body::before {
     </div>
 </div>
 
-<!-- EVENTS SECTION -->
+<!-- EVENTS -->
 <section class="section" id="events">
     <div class="section-head">
         <h2><span class="section-icon">📅</span> Upcoming Events</h2>
@@ -570,7 +571,7 @@ body::before {
 <section class="section" id="competitions">
     <div class="section-head">
         <h2><span class="section-icon">🏆</span> Competition Wins</h2>
-        <!-- Future: Add button and form for managing competition wins -->
+       
          <button class="btn btn-primary" onclick="toggleForm('competitionWinForm')">+ Add Competition Win</button>
     </div>
     <div class="section-body">
@@ -642,7 +643,7 @@ body::before {
     </div>
 </section>
 
-<!-- PUBLICATIONS SECTION -->
+<!-- PUBLICATIONS -->
 <section class="section" id="publications">
     <div class="section-head">
         <h2><span class="section-icon">📄</span> Publications</h2>
@@ -738,7 +739,7 @@ body::before {
     </div>
 </section>
 
-<!-- MEMBERS SECTION -->
+<!-- MEMBERS -->
 <section class="section" id="members">
     <div class="section-head">
         <h2><span class="section-icon">👥</span> Members</h2>
@@ -796,7 +797,7 @@ body::before {
 
 </div>
 
-<!-- EDIT EVENT MODAL -->
+<!-- EDIT EVENT -->
 <div class="modal-overlay" id="editEventModal">
     <div class="modal">
         <h3>✏️ Edit Event</h3>
